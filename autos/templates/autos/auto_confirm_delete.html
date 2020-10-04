@@ -1,0 +1,12 @@
+{% block content %}
+<meta name="dj4e" content="41f860e3b7f548abc1f8b812059137bf">
+<h1>Delete Auto</h1>
+
+<p>Are you sure you want to delete the auto: {{ auto }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes, delete.">
+</form>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<meta name="dj4e" content="41f860e3b7f548abc1f8b812059137bf">
+
+{% block content %}
+
+{% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+<meta name="dj4e" content="41f860e3b7f548abc1f8b812059137bf">
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" class="btn btn-primary" value="Login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+{% endblock %}
