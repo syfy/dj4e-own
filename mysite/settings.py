@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'myarts.apps.MyartsConfig',
     'aads.apps.AadsConfig',
-
+    'unesco.apps.UnescoConfig',  # Add
     # Sample Applications - don't copy
   #  'hello.apps.HelloConfig',
   #  'users.apps.UsersConfig',
