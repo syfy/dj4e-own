@@ -2,7 +2,8 @@ from django import forms
 from aads.models import Ad
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from aads.humanize import naturalsize
-
+from django.core.exceptions import ValidationError
+from django.core import validators
 
 # Create the form class.
 class CreateForm(forms.ModelForm):
@@ -14,11 +15,11 @@ class CreateForm(forms.ModelForm):
     # because we need to pull out things like content_type
     picture = forms.FileField(required=False, label='File to Upload <= '+max_upload_limit_text)
     upload_field_name = 'picture'
-
+    #comment = forms.CharField(required=True, max_length=500, min_length=3, strip=True)
     # Hint: this will need to be changed for use in the ads application :)
     class Meta:
         model = Ad
-        fields = ['title', 'price', 'picture']  # Picture is manual
+        fields = ['title', 'price', 'text','picture']  # Picture is manual
 
     # Validate the size of the picture
     def clean(self):
@@ -45,6 +46,10 @@ class CreateForm(forms.ModelForm):
 
         return instance
 
+
+# strip means to remove whitespace from the beginning and the end before storing the column
+class CommentForm(forms.Form):
+    comment = forms.CharField(required=True, max_length=500, min_length=3, strip=True)
 # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
 # https://stackoverflow.com/questions/2472422/django-file-upload-size-limit
 # https://stackoverflow.com/questions/32007311/how-to-change-data-in-django-modelform

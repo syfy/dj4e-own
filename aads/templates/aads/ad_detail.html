@@ -30,7 +30,7 @@
     {{ ad.price }}
 </p>
 <p>
-<a href="{% url 'aads:all' %}">All articles</a>
+<a href="{% url 'aads:all' %}">All Ads</a>
 </p>
 
 {% if ad.content_type %}
@@ -46,4 +46,24 @@
 <a href="{% url 'aads:ad_delete' ad.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 
+
+<p>
+{% load crispy_forms_tags %}
+<form method="post" action="{% url 'aads:ad_comment_create' ad.id %}">
+    {% csrf_token %}
+    {{ comment_form|crispy }}
+<input type="submit" value="Submit">
+<input type="submit" value="All Forums" onclick="window.location.href='{% url 'aads:all' %}';return false;">
+</form>
+</p>
+
+{% for comment in comments %}
+<p> {{ comment.text }}
+({{ comment.updated_at|naturaltime }})
+{% if user == comment.owner %}
+<a href="{% url 'aads:ad_comment_delete' comment.id %}"><i class="fa fa-trash"></i></a>
+{% endif %}
+</p>
+
+{% endfor %}
 {% endblock %}
