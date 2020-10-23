@@ -1,6 +1,14 @@
 {% extends "base_bootstrap.html" %}
 {% block navbar %}
 {% load app_tags %}
+<form>
+  <input type="text" placeholder="Search.." name="search"
+  {% if search %} value="{{ search }}" {% endif %}
+  >
+  <button type="submit"><i class="fa fa-search"></i></button>
+<a href="{% url 'aads:all' %}"><i class="fa fa-undo"></i></a>
+</form>
+
 <nav class="navbar navbar-default navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -12,7 +20,9 @@
       <li {% if request.get_full_path == ads %}class="active"{% endif %}>
           <a href="{% url 'aads:all' %}">Ads</a></li>
     </ul>
+
     <ul class="nav navbar-nav navbar-right">
+
         {% if user.is_authenticated %}
         <li>
         <a href="{% url 'aads:ad_create' %}">Create Ad</a>

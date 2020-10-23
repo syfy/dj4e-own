@@ -10,20 +10,35 @@ from django.urls import reverse
 #AdListView
 
 from aads.models import Ad,Comment,Fav
-
+from django.db.models import Q
 class AdListView(OwnerListView):
     model = Ad
     # By convention:
     template_name = "aads/ad_list.html"
     def get(self, request) :
-        ad_list = Ad.objects.all()
-        favorites = list()
-        if request.user.is_authenticated:
-            # rows = [{'id': 2}, {'id': 4} ... ]  (A list of rows)
-            rows = request.user.favorite_ads.values('id')
-            # favorites = [2, 4, ...] using list comprehension
-            favorites = [ row['id'] for row in rows ]
-        ctx = {'ad_list' : ad_list, 'favorites': favorites}
+        strval =  request.GET.get("search", False)
+        if strval:
+            query = Q(title__contains=strval)
+            query.add(Q(text__contains=strval), Q.OR)
+            ad_list = Ad.objects.filter(query).select_related().order_by('-updated_at')[:10]
+            favorites = list()
+            if request.user.is_authenticated:
+                # rows = [{'id': 2}, {'id': 4} ... ]  (A list of rows)
+                rows = request.user.favorite_ads.values('id')
+                # favorites = [2, 4, ...] using list comprehension
+                favorites = [ row['id'] for row in rows ]
+            ctx = {'ad_list' : ad_list, 'favorites': favorites, 'search': strval}
+
+        else:
+            ad_list = Ad.objects.all().order_by('-updated_at')[:10]
+            favorites = list()
+            if request.user.is_authenticated:
+                # rows = [{'id': 2}, {'id': 4} ... ]  (A list of rows)
+                rows = request.user.favorite_ads.values('id')
+                # favorites = [2, 4, ...] using list comprehension
+                favorites = [ row['id'] for row in rows ]
+            ctx = {'ad_list' : ad_list, 'favorites': favorites, 'search': strval}
+
         return render(request, self.template_name, ctx)
 
 class AdCreateView(LoginRequiredMixin, View):
